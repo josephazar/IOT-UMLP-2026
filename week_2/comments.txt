@@ -5,3 +5,13 @@ Click on the following links to download the libraries:
 touch esp32_mqtt_publisher.ino
 
 Node-red: http://localhost:1880/
+
+
+docker ps 
+docker exec -it influxdb-server influx 
+show databases;
+create database readings_db
+use readings_db
+show measurements
+
+select * from esp_readings limit 5

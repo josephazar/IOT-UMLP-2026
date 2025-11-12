@@ -1,0 +1,280 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "3a33c4b103c692fe",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "esp32/temperature",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "8b3872a74312f85e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "804fceda415fff51",
+                "66da0a9f43c8cc98"
+            ]
+        ]
+    },
+    {
+        "id": "8407a4eea8685419",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "esp32/humidity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "8b3872a74312f85e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 440,
+        "wires": [
+            [
+                "d3e0e79eecd3b5e4",
+                "22d8b19d86d99ee2"
+            ]
+        ]
+    },
+    {
+        "id": "804fceda415fff51",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d3e0e79eecd3b5e4",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "66da0a9f43c8cc98",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Process Temperature",
+        "func": "var temp = parseFloat(msg.payload);\nflow.set('temperature',temp); // GLOBAL VARIABLE\nflow.set('temp_timestamp', new Date());\nmsg.payload = {\n    temperature:temp,\n    unit: 'C',\n    timestamp: new Date().toISOString(),\n    status: temp>25?'HIGH': temp<18?'LOW':'NORMAL'\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 300,
+        "wires": [
+            [
+                "13e853e4bbcb3380",
+                "cb1249b68f55d26c"
+            ]
+        ]
+    },
+    {
+        "id": "13e853e4bbcb3380",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4c4f916d844f0b19",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "f4337ab75d277e60",
+        "name": "INFLUX ESP READINGS WRITE",
+        "measurement": "esp_readings",
+        "precision": "ms",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "bucket",
+        "x": 1050,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "22d8b19d86d99ee2",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Process Humidity",
+        "func": "var hum = parseFloat(msg.payload);\n\nflow.set('humidity',hum);\nflow.set('hum_timestamp', new Date());\n\nmsg.payload = {\n    humidity: hum,\n    unit: '%',\n    timestamp: new Date().toISOString(),\n    status: hum > 70 ? 'HIGH' : hum < 40 ? 'LOW': 'NORMAL'\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "6018eab3f6b40168",
+                "cb1249b68f55d26c"
+            ]
+        ]
+    },
+    {
+        "id": "6018eab3f6b40168",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug  HUM",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "cb1249b68f55d26c",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Merge Temp & Humidity",
+        "func": "var temp = flow.get(\"temperature\");\nvar hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined){\n    var tempValue = typeof temp === 'object' ? temp.temperature : temp;\n    var humValue = typeof hum === 'object' ? hum.humidity : hum;\n    \n    msg.payload = [\n        {\n            time: Math.floor(Date.now() / 1000),\n            temperature: parseFloat(tempValue),\n            humidity: parseFloat(humValue)\n        },\n        {\n            sensor: 'esp',\n            location: 'home',\n            type: 'DHT22',\n            id: 'ESP1'\n        }\n    ];\n    return msg;\n}\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 380,
+        "wires": [
+            [
+                "35e0263553f9c1cc",
+                "4c4f916d844f0b19"
+            ]
+        ]
+    },
+    {
+        "id": "35e0263553f9c1cc",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug Influx Entry",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 970,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "8b3872a74312f85e",
+        "type": "mqtt-broker",
+        "name": "MQTT BROKER",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f4337ab75d277e60",
+        "type": "influxdb",
+        "hostname": "influxdb-server",
+        "port": 8086,
+        "protocol": "http",
+        "database": "readings_db",
+        "name": "INFLUX DB SERVER",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "http://localhost:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "8e01d2eb237e9266",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-influxdb": "0.7.0"
+        }
+    }
+]
