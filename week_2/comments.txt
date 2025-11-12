@@ -1,0 +1,4 @@
+Click on the following links to download the libraries:
+• AsyncTCP: https://github.com/me-no-dev/AsyncTCP/archive/refs/heads/master.zip
+• ESPAsyncTCP: https://github.com/me-no-dev/ESPAsyncTCP/archive/refs/heads/master.zip
+
