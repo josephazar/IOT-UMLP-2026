@@ -6,7 +6,7 @@ This course requires each group to develop an innovative IoT application using t
 
 ### Hardware
 - **Microcontrollers**: ESP32, Arduino Nano 33 IoT
-- **Server**: Raspberry Pi 4 with IoTStack or PC with [IoT Stack](https://github.com/josephazar/NODE-RED-IOT-STACK)
+- **Server**: Raspberry Pi 4 with IoTStack or PC with [IoT Stack](https://github.com/josephazar/IOT-UMLP-2026)
 - **Sensors**: Temperature, humidity, accelerometer, etc.
 
 ### Communication Protocols
@@ -65,7 +65,6 @@ This course requires each group to develop an innovative IoT application using t
 1. Export your InfluxDB data to a portable format
 2. Document the data collection methodology
 3. Describe potential ML use cases for your dataset (e.g., anomaly detection, prediction, classification)
-4. Ensure data is anonymized if it contains sensitive information
 
 **Note**: You must explain your dataset and its potential ML applications during the final session presentation.
 
@@ -76,9 +75,3 @@ This course requires each group to develop an innovative IoT application using t
 - Prepare a clear demo of your system
 - Do not leave preparation for the last minute
 - Be ready to explain architecture, data flow, and all functionalities
-
-## Course Structure
-
-- `week_1/` - Introduction to Modern IoT Stack
-- `week_2/` - ESP32 MQTT Publisher with Node-RED integration
-- `week_3/` - Node.js MQTT Publisher alternative
