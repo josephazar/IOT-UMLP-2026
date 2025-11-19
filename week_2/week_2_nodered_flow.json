@@ -190,7 +190,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "Merge Temp & Humidity",
-        "func": "var temp = flow.get(\"temperature\");\nvar hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined){\n    var tempValue = typeof temp === 'object' ? temp.temperature : temp;\n    var humValue = typeof hum === 'object' ? hum.humidity : hum;\n    \n    msg.payload = [\n        {\n            time: Math.floor(Date.now() / 1000),\n            temperature: parseFloat(tempValue),\n            humidity: parseFloat(humValue)\n        },\n        {\n            sensor: 'esp',\n            location: 'home',\n            type: 'DHT22',\n            id: 'ESP1'\n        }\n    ];\n    return msg;\n}\nreturn null;\n",
+        "func": "var temp = flow.get(\"temperature\");\nvar hum = flow.get(\"humidity\");\n\nif (temp !== undefined && hum !== undefined){\n    var tempValue = typeof temp === 'object' ? temp.temperature : temp;\n    var humValue = typeof hum === 'object' ? hum.humidity : hum;\n    \n    msg.payload = [\n        {\n            temperature: parseFloat(tempValue),\n            humidity: parseFloat(humValue)\n        },\n        {\n            sensor: 'esp',\n            location: 'home',\n            type: 'DHT22',\n            id: 'ESP1'\n        }\n    ];\n    return msg;\n}\nreturn null;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,

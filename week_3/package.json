@@ -1,0 +1,12 @@
+{
+  "name": "week_3_mqtt_publisher",
+  "version": "1.0.0",
+  "description": "Node.js MQTT publisher for temperature and humidity",
+  "main": "mqtt_publisher.js",
+  "scripts": {
+    "start": "node mqtt_publisher.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.0.0"
+  }
+}

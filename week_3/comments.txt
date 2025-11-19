@@ -1,0 +1,3 @@
+Default Grafana credentials: http://localhost:3000
+Username: admin
+Password: admin
